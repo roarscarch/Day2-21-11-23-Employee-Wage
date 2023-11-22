@@ -1,7 +1,7 @@
 public class EmployeeWageProb {
     public static void main(String[] args) {
         System.out.println("Welcome to Employee Wage Calculation Problem");
-        final int empPresentFullTime = 1;// for switch
+        final int empPresentFullTime = 1;// for switch u have to use final keyword
         final int empPresentPartTime = 2;
 
         int empHrs = 0;
