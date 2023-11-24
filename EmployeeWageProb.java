@@ -1,18 +1,33 @@
 import java.util.Random;
 import java.util.Scanner;
 
-class EmpWageBuilder {
-    private String companyName;
-    private int empWagePerHour;
-    private int workingDays;
-    private int workingHoursPerMonth;
-    private int totalEmpWage;
+class CompanyEmpWage {
+    public String companyName;
+    public int empWagePerHour;
+    public int workingDays;
+    public int workingHoursPerMonth;
+    public int totalEmpWage;
 
-    public EmpWageBuilder(String companyName, int empWagePerHour, int workingDays, int workingHoursPerMonth) {
+    public CompanyEmpWage(String companyName, int empWagePerHour, int workingDays, int workingHoursPerMonth) {
         this.companyName = companyName;
         this.empWagePerHour = empWagePerHour;
         this.workingDays = workingDays;
         this.workingHoursPerMonth = workingHoursPerMonth;
+    }
+}
+
+class EmpWageBuilder {
+    private CompanyEmpWage[] companyEmpWages;
+    private int numCompanies;
+
+    public EmpWageBuilder() {
+        companyEmpWages = new CompanyEmpWage[5]; // Assuming a maximum of 5 companies, you can adjust as needed
+        numCompanies = 0;
+    }
+
+    public void addCompanyEmpWage(String companyName, int empWagePerHour, int workingDays, int workingHoursPerMonth) {
+        companyEmpWages[numCompanies] = new CompanyEmpWage(companyName, empWagePerHour, workingDays, workingHoursPerMonth);
+        numCompanies++;
     }
 
     private int generateEmployeeCheck() {
@@ -21,35 +36,39 @@ class EmpWageBuilder {
     }
 
     public void computeEmployeeWage() {
-        int empHrs = 0;
-        int empDays = 0;
+        for (int i = 0; i < numCompanies; i++) {
+            int empHrs = 0;
+            int empDays = 0;
 
-        while (empHrs < workingHoursPerMonth && empDays < workingDays) {
-            int empCheck = generateEmployeeCheck();
+            while (empHrs < companyEmpWages[i].workingHoursPerMonth && empDays < companyEmpWages[i].workingDays) {
+                int empCheck = generateEmployeeCheck();
 
-            switch (empCheck) {
-                case 1:
-                    empHrs += 8;
-                    empDays += 1;
-                    break;
-                case 2:
-                    empHrs += 4;
-                    empDays += 1;
-                    break;
-                default:
-                    empDays += 1;
+                switch (empCheck) {
+                    case 1:
+                        empHrs += 8;
+                        empDays += 1;
+                        break;
+                    case 2:
+                        empHrs += 4;
+                        empDays += 1;
+                        break;
+                    default:
+                        empDays += 1;
+                }
             }
-        }
 
-        totalEmpWage = empHrs * empWagePerHour;
+            companyEmpWages[i].totalEmpWage = empHrs * companyEmpWages[i].empWagePerHour;
+        }
     }
 
     public void displayEmployeeDetails() {
-        System.out.println("Company: " + companyName);
-        System.out.println("Emp Hours: " + (workingHoursPerMonth < totalEmpWage ? workingHoursPerMonth : totalEmpWage));
-        System.out.println("Emp Days: " + (workingDays < empDays ? workingDays : empDays));
-        System.out.println("Emp Wage: " + totalEmpWage);
-        System.out.println("-------------");
+        for (int i = 0; i < numCompanies; i++) {
+            System.out.println("Company: " + companyEmpWages[i].companyName);
+            System.out.println("Emp Hours: " + (companyEmpWages[i].workingHoursPerMonth < companyEmpWages[i].totalEmpWage ? companyEmpWages[i].workingHoursPerMonth : companyEmpWages[i].totalEmpWage));
+            System.out.println("Emp Days: " + (companyEmpWages[i].workingDays < companyEmpWages[i].totalEmpWage ? companyEmpWages[i].workingDays : companyEmpWages[i].totalEmpWage));
+            System.out.println("Emp Wage: " + companyEmpWages[i].totalEmpWage);
+            System.out.println("-------------");
+        }
     }
 }
 
@@ -59,19 +78,13 @@ public class EmployeeWageCalculator {
 
         Scanner scanner = new Scanner(System.in);
 
-        System.out.print("Enter Company Name: ");
-        String companyName = scanner.nextLine();
+        EmpWageBuilder empWageBuilder = new EmpWageBuilder();
 
-        System.out.print("Enter Wage Per Hour: ");
-        int empWagePerHour = scanner.nextInt();
+        // Adding companies
+        empWageBuilder.addCompanyEmpWage("Company A", 20, 20, 100);
+        empWageBuilder.addCompanyEmpWage("Company B", 25, 22, 120);
+        // Add more companies as needed
 
-        System.out.print("Enter Working Days: ");
-        int workingDays = scanner.nextInt();
-
-        System.out.print("Enter Working Hours Per Month: ");
-        int workingHoursPerMonth = scanner.nextInt();
-
-        EmpWageBuilder empWageBuilder = new EmpWageBuilder(companyName, empWagePerHour, workingDays, workingHoursPerMonth);
         empWageBuilder.computeEmployeeWage();
         empWageBuilder.displayEmployeeDetails();
 
