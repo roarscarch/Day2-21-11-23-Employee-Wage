@@ -1,18 +1,19 @@
 import java.util.ArrayList;
+import java.util.HashMap;
 
 interface IEmployeeWageComputation {
     void addCompany(String companyName, int wagePerHr, int maxWorkingDays, int maxWorkingHrs);
 
     void calculateTotalWage();
+
+    void printTotalEmpWages();
 }
 
 class CompanyEmpWage {
-   
     final String COMPANY_NAME;
     final int WAGE_PER_HR;
     final int MAX_WORKING_DAYS;
     final int MAX_WORKING_HRS;
-  
     int totalEmpWage;
 
     CompanyEmpWage(String companyName, int wagePerHr, int maxWorkingDays, int maxWorkingHrs) {
@@ -31,7 +32,6 @@ class CompanyEmpWage {
     public String toString() {
         System.out.println("Details of " + COMPANY_NAME + " employee");
         System.out.println("-----------------------------------------------------");
-        System.err.println("Wage per hour:" + WAGE_PER_HR);
         System.out.println("Maximum working days:" + MAX_WORKING_DAYS);
         System.out.println("Maximum working hours:" + MAX_WORKING_HRS);
         return "Total wage for a month of " + COMPANY_NAME + " employee is " + totalEmpWage + "\n";
@@ -39,19 +39,20 @@ class CompanyEmpWage {
 }
 
 class EmployeeWageProb implements IEmployeeWageComputation {
-    // class constants
     public static final int PART_TIME = 1;
     public static final int FULL_TIME = 2;
-    // instance variables
     ArrayList<CompanyEmpWage> companies;
+    HashMap<String, Integer> totalEmpWages;
 
     public EmployeeWageProb() {
         companies = new ArrayList<>();
+        totalEmpWages = new HashMap<>();
     }
 
     public void addCompany(String companyName, int wagePerHr, int maxWorkingDays, int maxWorkingHrs) {
         CompanyEmpWage company = new CompanyEmpWage(companyName, wagePerHr, maxWorkingDays, maxWorkingHrs);
         companies.add(company);
+        totalEmpWages.put(companyName, 0);
     }
 
     int generateEmployeeType() {
@@ -89,17 +90,26 @@ class EmployeeWageProb implements IEmployeeWageComputation {
             workingHrs = getWorkingHrs(empType);
             int wage = workingHrs * companyEmpWage.WAGE_PER_HR;
             totalWage += wage;
-            System.out.printf("%5d       %5d      %5d      %5d\n", day, workingHrs, wage, totalWorkingHrs + workingHrs);
+            System.out.printf("%5d       %5d      %5d      %5d\n", day, workingHrs, wage,
+                    totalWorkingHrs + workingHrs);
         }
+        totalEmpWages.put(companyEmpWage.COMPANY_NAME, totalWage);
         return totalWage;
+    }
+
+    public void printTotalEmpWages() {
+        System.out.println("The Companies and their total Employee Wages are:");
+        for (String companyName : totalEmpWages.keySet()) {
+            System.out.println(companyName + ": " + totalEmpWages.get(companyName));
+        }
     }
 
     public static void main(String args[]) {
         EmployeeWageProb employeeWageProb = new EmployeeWageProb();
         employeeWageProb.addCompany("Microsoft", 4, 30, 100);
         employeeWageProb.addCompany("Google", 5, 40, 170);
-        employeeWageProb.addCompany("Apple", 9, 10, 70);
         employeeWageProb.addCompany("Amazon", 19, 10, 150);
         employeeWageProb.calculateTotalWage();
+        employeeWageProb.printTotalEmpWages();
     }
 }
