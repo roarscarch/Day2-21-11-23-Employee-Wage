@@ -6,7 +6,7 @@ interface IEmployeeWageComputation {
 
     void calculateTotalWage();
 
-    void printTotalEmpWages();
+    int getTotalEmpWage(String companyName);
 }
 
 class CompanyEmpWage {
@@ -81,7 +81,7 @@ class EmployeeWageProb implements IEmployeeWageComputation {
     int calculateTotalWage(CompanyEmpWage companyEmpWage) {
         System.out.println("Computation of total wage of " + companyEmpWage.COMPANY_NAME + " employee");
         System.out.println("-----------------------------------------------------");
-        System.out.printf("%5s     %5s     %5s     %5s\n", "Day", "Workinghrs", "Wage", "Total working hrs");
+        System.out.printf("%4s\t%4s\t%2s\t%4s\n", "Day", "Workinghrs", "Wage", "Total working hrs");
 
         int workingHrs, totalWage = 0;
         for (int day = 1, totalWorkingHrs = 0; day <= companyEmpWage.MAX_WORKING_DAYS
@@ -90,18 +90,14 @@ class EmployeeWageProb implements IEmployeeWageComputation {
             workingHrs = getWorkingHrs(empType);
             int wage = workingHrs * companyEmpWage.WAGE_PER_HR;
             totalWage += wage;
-            System.out.printf("%5d       %5d      %5d      %5d\n", day, workingHrs, wage,
-                    totalWorkingHrs + workingHrs);
+            System.out.printf("%4d\t%5d\t%10d\t%10d\n", day, workingHrs, wage, totalWorkingHrs + workingHrs);
         }
         totalEmpWages.put(companyEmpWage.COMPANY_NAME, totalWage);
         return totalWage;
     }
 
-    public void printTotalEmpWages() {
-        System.out.println("The Companies and their total Employee Wages are:");
-        for (String companyName : totalEmpWages.keySet()) {
-            System.out.println(companyName + ": " + totalEmpWages.get(companyName));
-        }
+    public int getTotalEmpWage(String companyName) {
+        return totalEmpWages.get(companyName);
     }
 
     public static void main(String args[]) {
@@ -110,6 +106,8 @@ class EmployeeWageProb implements IEmployeeWageComputation {
         employeeWageProb.addCompany("Google", 5, 40, 170);
         employeeWageProb.addCompany("Amazon", 19, 10, 150);
         employeeWageProb.calculateTotalWage();
-        employeeWageProb.printTotalEmpWages();
+        String query = "Google";
+        int totalWage = employeeWageProb.getTotalEmpWage(query);
+        System.out.println("Total Employee Wage for " + query + " company is " + totalWage);
     }
 }
