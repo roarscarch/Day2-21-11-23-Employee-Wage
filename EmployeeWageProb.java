@@ -40,12 +40,12 @@ class CompanyEmpWage {
     }
 }
 
-class EmployeeWageComputation implements IEmployeeWageComputation {
+class EmployeeWageProb implements IEmployeeWageComputation {
     private static final Random random = new Random();
     private int noOfCompanies, index;
     private CompanyEmpWage[] companies;
 
-    public EmployeeWageComputation(int noOfCompanies) {
+    public EmployeeWageProb(int noOfCompanies) {
         this.noOfCompanies = noOfCompanies;
         this.companies = new CompanyEmpWage[noOfCompanies];
         this.index = 0;
@@ -100,10 +100,10 @@ class EmployeeWageComputation implements IEmployeeWageComputation {
     }
 
     public static void main(String args[]) {
-        EmployeeWageComputation employeeWageComputation = new EmployeeWageComputation(3);
-        employeeWageComputation.addCompany("Microsoft", 4, 30, 100);
-        employeeWageComputation.addCompany("Google", 5, 40, 170);
-        employeeWageComputation.addCompany("Apple", 9, 10, 70);
-        employeeWageComputation.calculateTotalWage();
+        EmployeeWageProb employeeWageProb = new EmployeeWageProb(3);
+        employeeWageProb.addCompany("Microsoft", 4, 30, 100);
+        employeeWageProb.addCompany("Google", 5, 40, 170);
+        employeeWageProb.addCompany("Apple", 9, 10, 70);
+        employeeWageProb.calculateTotalWage();
     }
 }
